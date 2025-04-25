@@ -1,0 +1,65 @@
+name: Build and Release Tauri Installer
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Setup Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+
+      - name: Install build dependencies
+        run: |
+          choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools"
+          npm install -g @tauri-apps/cli
+
+      - name: Install frontend deps
+        working-directory: dashboard
+        run: npm ci
+
+      - name: Build web assets
+        working-directory: dashboard
+        run: npm run build:web
+
+      - name: Build Tauri bundle
+        working-directory: dashboard
+        run: npm run build:tauri
+
+      - name: Upload Installer (.exe)
+        uses: actions/upload-artifact@v3
+        with:
+          name: CucaFood-PDV-Installer
+          path: dashboard/src-tauri/target/release/bundle/nsis/CucaFood\ PDV\ Setup\ *.exe
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Installer Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: CucaFood-PDV-Installer
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ github.run_number }}
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            *.exe
