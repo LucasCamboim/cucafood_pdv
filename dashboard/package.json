@@ -1,0 +1,13 @@
+{
+  "name": "cucafood-dashboard",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build"
+  },
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "tauri": "^1.0.0"
+  }
+}

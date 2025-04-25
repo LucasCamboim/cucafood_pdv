@@ -1,0 +1,15 @@
+{
+  "package": {
+    "productName": "CucaFood PDV Dashboard",
+    "version": "0.1.0"
+  },
+  "tauri": {
+    "windows": [
+      {
+        "title": "CucaFood PDV",
+        "width": 800,
+        "height": 600
+      }
+    ]
+  }
+}
