@@ -7,6 +7,6 @@
   "dependencies": {
     "express": "^4.18.2",
     "prisma": "^4.11.0",
-    "wppconnect": "^2.0.0"
+    "@wppconnect-team/wppconnect": "^1.37.0"
   }
 }
